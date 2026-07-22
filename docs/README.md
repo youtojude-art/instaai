@@ -10,6 +10,7 @@
 - [04_api.md](./04_api.md): Server Actions、Route Handlers、入力検証、API設計
 - [05_ai.md](./05_ai.md): AI社員、プロンプト、Structured Outputs、記憶、RAG設計
 - [06_development_plan.md](./06_development_plan.md): 開発フェーズ、実装順序、タスク一覧、テスト方針
+- [USER_MANUAL.md](./USER_MANUAL.md): 公開後のログイン、案件登録、AIチャット、投稿管理、承認、実績入力、月次レポートの操作マニュアル
 
 ## MVPの開発方針
 
