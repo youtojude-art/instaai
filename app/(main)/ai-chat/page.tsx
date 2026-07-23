@@ -86,6 +86,16 @@ export default async function AiChatPage({ searchParams }: AiChatPageProps) {
                     {message.role === "assistant" ? <Bot className="h-4 w-4 text-primary" /> : null}
                     {message.role === "user" ? "あなた" : workspace?.aiEmployee?.name ?? "AI社員"}
                   </div>
+                  {message.metadata.attachments?.map((attachment, index) =>
+                    attachment.type === "image" && attachment.dataUrl ? (
+                      <img
+                        key={`${message.id}-${index}`}
+                        src={attachment.dataUrl}
+                        alt={attachment.name ?? "添付画像"}
+                        className="mb-3 max-h-72 w-full rounded-md object-contain"
+                      />
+                    ) : null
+                  )}
                   <p className="whitespace-pre-wrap text-sm leading-6">{message.content}</p>
                   {message.role === "assistant" ? <SaveChatMessageButton messageId={message.id} /> : null}
                 </div>

@@ -12,6 +12,15 @@ export type ChatMessage = {
   id: string;
   role: "user" | "assistant" | "system";
   content: string;
+  metadata: {
+    attachments?: Array<{
+      type?: string;
+      dataUrl?: string;
+      mimeType?: string;
+      name?: string | null;
+      size?: number | null;
+    }>;
+  };
   created_at: string;
 };
 
@@ -109,7 +118,7 @@ async function getChatMessages(threadId: string): Promise<ChatMessage[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("chat_messages")
-    .select("id,role,content,created_at")
+    .select("id,role,content,metadata,created_at")
     .eq("thread_id", threadId)
     .is("deleted_at", null)
     .order("created_at", { ascending: true });

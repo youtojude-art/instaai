@@ -1,6 +1,7 @@
 type GenerateAiReplyInput = {
   systemPrompt: string;
   userPrompt: string;
+  imageDataUrl?: string;
 };
 
 type OpenAiResponse = {
@@ -16,7 +17,7 @@ type OpenAiResponse = {
   };
 };
 
-export async function generateAiReply({ systemPrompt, userPrompt }: GenerateAiReplyInput) {
+export async function generateAiReply({ systemPrompt, userPrompt, imageDataUrl }: GenerateAiReplyInput) {
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
@@ -41,7 +42,19 @@ export async function generateAiReply({ systemPrompt, userPrompt }: GenerateAiRe
         },
         {
           role: "user",
-          content: userPrompt
+          content: imageDataUrl
+            ? [
+                {
+                  type: "input_text",
+                  text: userPrompt
+                },
+                {
+                  type: "input_image",
+                  image_url: imageDataUrl,
+                  detail: "auto"
+                }
+              ]
+            : userPrompt
         }
       ],
       temperature: 0.7,

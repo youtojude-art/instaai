@@ -11,14 +11,26 @@ type ActionResult = {
   message: string;
 };
 
+type ChatImageAttachment = {
+  type: "image";
+  dataUrl: string;
+  mimeType: string;
+  name: string | null;
+  size: number | null;
+};
+
 export async function sendChatMessage(formData: FormData): Promise<ActionResult> {
   const parsed = sendChatMessageSchema.safeParse({
     projectId: formData.get("projectId"),
-    content: formData.get("content")
+    content: formData.get("content"),
+    imageDataUrl: formData.get("imageDataUrl"),
+    imageMimeType: formData.get("imageMimeType"),
+    imageName: formData.get("imageName"),
+    imageSize: formData.get("imageSize")
   });
 
   if (!parsed.success) {
-    return { ok: false, message: "メッセージを入力してください。" };
+    return { ok: false, message: parsed.error.issues[0]?.message ?? "メッセージを入力してください。" };
   }
 
   const supabase = await createClient();
@@ -40,11 +52,17 @@ export async function sendChatMessage(formData: FormData): Promise<ActionResult>
     return { ok: false, message: thread.message };
   }
 
+  const imageAttachment = createImageAttachment(parsed.data);
+  const userMessageContent = parsed.data.content || "画像を添付しました。";
+
   const { error: userMessageError } = await supabase.from("chat_messages").insert({
     thread_id: thread.threadId,
     project_id: parsed.data.projectId,
     role: "user",
-    content: parsed.data.content,
+    content: userMessageContent,
+    metadata: {
+      attachments: imageAttachment ? [imageAttachment] : []
+    },
     created_by: user.id
   });
 
@@ -52,7 +70,7 @@ export async function sendChatMessage(formData: FormData): Promise<ActionResult>
     return { ok: false, message: `メッセージを保存できませんでした: ${userMessageError.message}` };
   }
 
-  const assistantReplyResult = await createAssistantReply(parsed.data.content, workspace);
+  const assistantReplyResult = await createAssistantReply(userMessageContent, workspace, imageAttachment?.dataUrl);
   const { error: assistantMessageError } = await supabase.from("chat_messages").insert({
     thread_id: thread.threadId,
     project_id: parsed.data.projectId,
@@ -111,10 +129,41 @@ async function getOrCreateThread(projectId: string, userId: string, aiEmployeeNa
   return { ok: true as const, threadId: createdThread.id as string };
 }
 
-async function createAssistantReply(userInstruction: string, workspace: Awaited<ReturnType<typeof getProjectWorkspace>>) {
+function createImageAttachment(data: {
+  imageDataUrl?: string;
+  imageMimeType?: string;
+  imageName?: string;
+  imageSize?: number;
+}): ChatImageAttachment | null {
+  if (!data.imageDataUrl || !data.imageMimeType) {
+    return null;
+  }
+
+  return {
+    type: "image",
+    dataUrl: data.imageDataUrl,
+    mimeType: data.imageMimeType,
+    name: data.imageName ?? null,
+    size: data.imageSize ?? null
+  };
+}
+
+async function createAssistantReply(
+  userInstruction: string,
+  workspace: Awaited<ReturnType<typeof getProjectWorkspace>>,
+  imageDataUrl?: string
+) {
   const aiReply = await generateAiReply({
     systemPrompt: createSystemPrompt(workspace),
-    userPrompt: userInstruction
+    userPrompt: imageDataUrl
+      ? [
+          userInstruction,
+          "",
+          "添付画像を確認し、Instagram運用に使える観点で分析してください。",
+          "必要に応じて、画像内容、投稿文、改善点、確認事項、次に行うタスクを整理してください。"
+        ].join("\n")
+      : userInstruction,
+    imageDataUrl
   });
 
   if (aiReply.ok) {
@@ -127,7 +176,7 @@ async function createAssistantReply(userInstruction: string, workspace: Awaited<
   return {
     ok: false as const,
     error: aiReply.message,
-    text: createFallbackReply(userInstruction, workspace, aiReply.message)
+    text: createFallbackReply(userInstruction, workspace, aiReply.message, Boolean(imageDataUrl))
   };
 }
 
@@ -189,7 +238,8 @@ function createSystemPrompt(workspace: Awaited<ReturnType<typeof getProjectWorks
 function createFallbackReply(
   userInstruction: string,
   workspace: Awaited<ReturnType<typeof getProjectWorkspace>>,
-  errorMessage: string
+  errorMessage: string,
+  hasImage = false
 ) {
   const aiName = workspace.aiEmployee?.name ?? "AI社員";
   const projectName = workspace.project?.name ?? "選択中の案件";
@@ -202,6 +252,7 @@ function createFallbackReply(
     `${aiName}です。${projectName}の内容として受け取りました。`,
     "",
     `指示内容: ${userInstruction}`,
+    hasImage ? "添付画像: あり" : "添付画像: なし",
     "",
     "参照した案件情報:",
     `- ブランドトーン: ${tone}`,
