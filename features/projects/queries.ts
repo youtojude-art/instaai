@@ -51,6 +51,17 @@ export type ProjectWorkspace = {
       proactiveSuggestions?: boolean;
     } | null;
   } | null;
+  referenceAccounts: Array<{
+    id: string;
+    account_name: string;
+    account_url: string | null;
+    reason: string | null;
+    strengths: string | null;
+    visual_notes: string | null;
+    content_notes: string | null;
+    avoid_notes: string | null;
+    apply_notes: string | null;
+  }>;
 };
 
 export async function getDashboardProjects(): Promise<DashboardProject[]> {
@@ -70,7 +81,7 @@ export async function getDashboardProjects(): Promise<DashboardProject[]> {
 
 export async function getProjectWorkspace(projectId: string): Promise<ProjectWorkspace> {
   const supabase = await createClient();
-  const [projectResult, brandResult, targetResult, aiEmployeeResult] = await Promise.all([
+  const [projectResult, brandResult, targetResult, aiEmployeeResult, referenceAccountsResult] = await Promise.all([
     supabase
       .from("projects")
       .select("id,name,company_name,shop_name,industry,status")
@@ -94,13 +105,20 @@ export async function getProjectWorkspace(projectId: string): Promise<ProjectWor
       .select("name,personality,speaking_style,task_scope,settings")
       .eq("project_id", projectId)
       .is("deleted_at", null)
-      .maybeSingle()
+      .maybeSingle(),
+    supabase
+      .from("reference_accounts")
+      .select("id,account_name,account_url,reason,strengths,visual_notes,content_notes,avoid_notes,apply_notes")
+      .eq("project_id", projectId)
+      .is("deleted_at", null)
+      .order("created_at", { ascending: false })
   ]);
 
   return {
     project: projectResult.data as ProjectWorkspace["project"],
     brandProfile: brandResult.data as ProjectWorkspace["brandProfile"],
     targetProfile: targetResult.data as ProjectWorkspace["targetProfile"],
-    aiEmployee: aiEmployeeResult.data as ProjectWorkspace["aiEmployee"]
+    aiEmployee: aiEmployeeResult.data as ProjectWorkspace["aiEmployee"],
+    referenceAccounts: (referenceAccountsResult.data ?? []) as ProjectWorkspace["referenceAccounts"]
   };
 }

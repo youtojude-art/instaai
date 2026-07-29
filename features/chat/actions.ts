@@ -224,15 +224,42 @@ function createSystemPrompt(workspace: Awaited<ReturnType<typeof getProjectWorks
     `欲求: ${workspace.targetProfile?.desires ?? "未設定"}`,
     `行動してほしい内容: ${workspace.targetProfile?.behavior_notes ?? "未設定"}`,
     "",
+    "【参考アカウント分析】",
+    createReferenceAccountPrompt(workspace.referenceAccounts),
+    "",
     "【回答ルール】",
     "1. 事務スタッフの指示を最優先する",
     "2. 指示が曖昧な場合は、登録情報をもとに最適案を出す",
     "3. 不足情報があれば、作業を止めずに不足項目として整理する",
     "4. ブランドトーン、必須訴求、NG表現を必ず反映する",
-    "5. 根拠のない断定や誇張表現は避ける",
-    "6. 回答は日本語で、事務スタッフがそのまま作業に使える形にする",
-    "7. 必要に応じて、作成内容、必要素材、確認事項、次に行うタスクを整理する"
+    "5. 参考アカウントは丸写しせず、構成・見せ方・訴求の型だけを自社向けに変換する",
+    "6. 参考アカウントの避けたい点は反映しない",
+    "7. 根拠のない断定や誇張表現は避ける",
+    "8. 回答は日本語で、事務スタッフがそのまま作業に使える形にする",
+    "9. 必要に応じて、作成内容、必要素材、確認事項、次に行うタスクを整理する"
   ].join("\n");
+}
+
+function createReferenceAccountPrompt(referenceAccounts: Awaited<ReturnType<typeof getProjectWorkspace>>["referenceAccounts"]) {
+  if (!referenceAccounts || referenceAccounts.length === 0) {
+    return "未設定";
+  }
+
+  return referenceAccounts
+    .slice(0, 5)
+    .map((account, index) =>
+      [
+        `参考${index + 1}: ${account.account_name}`,
+        `URL: ${account.account_url ?? "未設定"}`,
+        `参考にする理由: ${account.reason ?? "未設定"}`,
+        `強み: ${account.strengths ?? "未設定"}`,
+        `見た目・デザイン: ${account.visual_notes ?? "未設定"}`,
+        `投稿内容・構成: ${account.content_notes ?? "未設定"}`,
+        `真似しない点: ${account.avoid_notes ?? "未設定"}`,
+        `自社投稿への取り入れ方: ${account.apply_notes ?? "未設定"}`
+      ].join("\n")
+    )
+    .join("\n\n");
 }
 
 function createFallbackReply(

@@ -108,6 +108,7 @@ supabase/migrations/003_chat.sql
 supabase/migrations/004_content_posts.sql
 supabase/migrations/005_content_approvals.sql
 supabase/migrations/006_post_metrics.sql
+supabase/migrations/007_reference_accounts.sql
 ```
 
 すでに実行済みのものは再実行しても基本的に壊れないよう `if not exists` や `drop policy if exists` を使っていますが、エラーが出た場合は全文を控えて確認します。
@@ -167,4 +168,3 @@ pnpm typecheck
 pnpm test
 pnpm build
 ```
-

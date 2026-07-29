@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { aiEmployeeSchema, brandProfileSchema, targetProfileSchema } from "@/lib/validations/project-context";
+import { aiEmployeeSchema, brandProfileSchema, referenceAccountSchema, targetProfileSchema } from "@/lib/validations/project-context";
 
 type ActionResult = {
   ok: boolean;
@@ -111,4 +111,44 @@ export async function upsertAiEmployee(formData: FormData): Promise<ActionResult
 
   revalidatePath(`/projects/${projectId}`);
   return { ok: true, message: "AI社員設定を保存しました。" };
+}
+
+export async function createReferenceAccount(formData: FormData): Promise<ActionResult> {
+  const parsed = referenceAccountSchema.safeParse(Object.fromEntries(formData));
+
+  if (!parsed.success) {
+    return { ok: false, message: "参考アカウント情報の入力内容を確認してください。" };
+  }
+
+  const supabase = await createClient();
+  const {
+    projectId,
+    accountName,
+    accountUrl,
+    visualNotes,
+    contentNotes,
+    avoidNotes,
+    applyNotes,
+    ...rest
+  } = parsed.data;
+
+  const { error } = await supabase.from("reference_accounts").insert({
+    project_id: projectId,
+    account_name: accountName,
+    account_url: accountUrl || null,
+    reason: rest.reason || null,
+    strengths: rest.strengths || null,
+    visual_notes: visualNotes || null,
+    content_notes: contentNotes || null,
+    avoid_notes: avoidNotes || null,
+    apply_notes: applyNotes || null
+  });
+
+  if (error) {
+    return { ok: false, message: `参考アカウントを保存できませんでした: ${error.message}` };
+  }
+
+  revalidatePath(`/projects/${projectId}`);
+  revalidatePath("/ai-chat");
+  return { ok: true, message: "参考アカウントを保存しました。AI社員チャットに反映されます。" };
 }

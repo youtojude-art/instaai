@@ -17,6 +17,7 @@ Vercel公開前後に確認する項目です。
 - [ ] `004_content_posts.sql` を実行済み
 - [ ] `005_content_approvals.sql` を実行済み
 - [ ] `006_post_metrics.sql` を実行済み
+- [ ] `007_reference_accounts.sql` を実行済み
 - [ ] Supabase AuthのSite URLを本番URLに設定した
 - [ ] Redirect URLsに本番URLとlocalhostを設定した
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { aiEmployeeSchema, brandProfileSchema, targetProfileSchema } from "@/lib/validations/project-context";
+import { aiEmployeeSchema, brandProfileSchema, referenceAccountSchema, targetProfileSchema } from "@/lib/validations/project-context";
 
 const projectId = "00000000-0000-4000-8000-000000000001";
 
@@ -48,6 +48,22 @@ describe("project context schemas", () => {
       emojiAmount: "low",
       salesTone: "medium",
       proactiveSuggestions: "true"
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it("accepts reference account input", () => {
+    const result = referenceAccountSchema.safeParse({
+      projectId,
+      accountName: "参考アカウント",
+      accountUrl: "https://www.instagram.com/example/",
+      reason: "世界観が近い",
+      strengths: "冒頭の見せ方が強い",
+      visualNotes: "余白が多い",
+      contentNotes: "悩み提示から始まる",
+      avoidNotes: "煽りは真似しない",
+      applyNotes: "構成だけ参考にする"
     });
 
     expect(result.success).toBe(true);

@@ -48,3 +48,15 @@ export const aiEmployeeSchema = z.object({
   salesTone: z.enum(["low", "medium", "high"]),
   proactiveSuggestions: z.enum(["true", "false"])
 });
+
+export const referenceAccountSchema = z.object({
+  projectId: z.string().uuid(),
+  accountName: z.string().trim().min(1).max(120),
+  accountUrl: z.string().trim().url().max(500).optional().or(z.literal("")).transform((value) => value || ""),
+  reason: optionalLongText,
+  strengths: optionalLongText,
+  visualNotes: optionalLongText,
+  contentNotes: optionalLongText,
+  avoidNotes: optionalLongText,
+  applyNotes: optionalLongText
+});

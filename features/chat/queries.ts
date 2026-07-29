@@ -107,7 +107,8 @@ export async function getChatWorkspace(projectId?: string) {
       project: projectResult.data,
       brandProfile: brandResult.data,
       targetProfile: targetResult.data,
-      aiEmployee: aiEmployeeResult.data
+      aiEmployee: aiEmployeeResult.data,
+      referenceAccounts: []
     } as ProjectWorkspace & { aiEmployee: (ProjectWorkspace["aiEmployee"] & { id?: string }) | null },
     thread,
     messages
