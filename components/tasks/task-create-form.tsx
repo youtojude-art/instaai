@@ -98,7 +98,7 @@ export function TaskCreateForm({ projects, posts, defaultPost }: TaskCreateFormP
         </label>
       </div>
 
-      <Button type="submit" disabled={isPending || projects.length === 0} className="gap-2">
+      <Button type="submit" disabled={isPending || projects.length === 0} className="w-full gap-2 md:w-auto">
         <Plus className="h-4 w-4" />
         {isPending ? "作成中..." : "タスクを作成"}
       </Button>

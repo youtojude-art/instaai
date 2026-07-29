@@ -112,7 +112,7 @@ export function MetricForm({ posts, metric, defaultPost }: MetricFormProps) {
         <Textarea name="notes" defaultValue={metric?.notes ?? ""} placeholder="反応が良かった理由、次回改善点など" />
       </label>
 
-      <Button type="submit" disabled={isPending || (!defaultPost && posts.length === 0)} className="gap-2">
+      <Button type="submit" disabled={isPending || (!defaultPost && posts.length === 0)} className="w-full gap-2 md:w-auto">
         <Save className="h-4 w-4" />
         {isPending ? "保存中..." : "実績を保存"}
       </Button>

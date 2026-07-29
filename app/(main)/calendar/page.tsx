@@ -67,52 +67,54 @@ export default async function CalendarPage({ searchParams }: CalendarPageProps) 
         </div>
       </div>
 
-      <section className="rounded-lg border bg-white">
-        <div className="grid grid-cols-7 border-b bg-muted/50 text-center text-xs font-medium text-muted-foreground">
-          {weekDays.map((day) => (
-            <div key={day} className="px-2 py-3">
-              {day}
-            </div>
-          ))}
-        </div>
-        <div className="divide-y">
-          {weeks.map((week, weekIndex) => (
-            <div key={weekIndex} className="grid grid-cols-7 divide-x">
-              {week.map((day) => (
-                <div key={day.key} className={`min-h-36 p-2 ${day.isCurrentMonth ? "bg-white" : "bg-muted/30"}`}>
-                  <div className="flex items-center justify-between">
-                    <span className={`text-sm font-medium ${day.isToday ? "rounded-full bg-primary px-2 py-0.5 text-primary-foreground" : day.isCurrentMonth ? "text-foreground" : "text-muted-foreground"}`}>
-                      {day.date.getDate()}
-                    </span>
-                    {day.posts.length > 0 ? (
-                      <span className="text-xs text-muted-foreground">{day.posts.length}件</span>
-                    ) : null}
+      <section className="overflow-x-auto rounded-lg border bg-white">
+        <div className="min-w-[760px]">
+          <div className="grid grid-cols-7 border-b bg-muted/50 text-center text-xs font-medium text-muted-foreground">
+            {weekDays.map((day) => (
+              <div key={day} className="px-2 py-3">
+                {day}
+              </div>
+            ))}
+          </div>
+          <div className="divide-y">
+            {weeks.map((week, weekIndex) => (
+              <div key={weekIndex} className="grid grid-cols-7 divide-x">
+                {week.map((day) => (
+                  <div key={day.key} className={`min-h-36 p-2 ${day.isCurrentMonth ? "bg-white" : "bg-muted/30"}`}>
+                    <div className="flex items-center justify-between">
+                      <span className={`text-sm font-medium ${day.isToday ? "rounded-full bg-primary px-2 py-0.5 text-primary-foreground" : day.isCurrentMonth ? "text-foreground" : "text-muted-foreground"}`}>
+                        {day.date.getDate()}
+                      </span>
+                      {day.posts.length > 0 ? (
+                        <span className="text-xs text-muted-foreground">{day.posts.length}件</span>
+                      ) : null}
+                    </div>
+                    <div className="mt-2 space-y-2">
+                      {day.posts.slice(0, 3).map((post) => (
+                        <Link
+                          key={post.id}
+                          href={`/posts/${post.id}`}
+                          className="block rounded-md border border-l-4 border-l-primary bg-white px-2 py-2 text-left shadow-sm hover:bg-muted/40"
+                        >
+                          <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                            <Clock className="h-3 w-3" />
+                            {formatTime(post.scheduled_at)}
+                          </span>
+                          <span className="mt-1 block truncate text-xs font-medium">{post.title}</span>
+                          <span className="mt-1 block truncate text-[11px] text-muted-foreground">
+                            {post.projects?.name ?? "案件未設定"} / {typeLabels[post.content_type] ?? post.content_type} / {statusLabels[post.status] ?? post.status}
+                          </span>
+                        </Link>
+                      ))}
+                      {day.posts.length > 3 ? (
+                        <p className="text-xs text-muted-foreground">他 {day.posts.length - 3} 件</p>
+                      ) : null}
+                    </div>
                   </div>
-                  <div className="mt-2 space-y-2">
-                    {day.posts.slice(0, 3).map((post) => (
-                      <Link
-                        key={post.id}
-                        href={`/posts/${post.id}`}
-                        className="block rounded-md border border-l-4 border-l-primary bg-white px-2 py-2 text-left shadow-sm hover:bg-muted/40"
-                      >
-                        <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                          <Clock className="h-3 w-3" />
-                          {formatTime(post.scheduled_at)}
-                        </span>
-                        <span className="mt-1 block truncate text-xs font-medium">{post.title}</span>
-                        <span className="mt-1 block truncate text-[11px] text-muted-foreground">
-                          {post.projects?.name ?? "案件未設定"} / {typeLabels[post.content_type] ?? post.content_type} / {statusLabels[post.status] ?? post.status}
-                        </span>
-                      </Link>
-                    ))}
-                    {day.posts.length > 3 ? (
-                      <p className="text-xs text-muted-foreground">他 {day.posts.length - 3} 件</p>
-                    ) : null}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ))}
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

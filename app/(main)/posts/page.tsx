@@ -23,8 +23,8 @@ export default async function PostsPage() {
         <h1 className="mt-1 text-2xl font-semibold">投稿一覧</h1>
       </div>
 
-      <section className="rounded-lg border bg-white">
-        <div className="grid grid-cols-[1.5fr_1fr_120px_120px] gap-4 border-b px-5 py-3 text-sm font-medium text-muted-foreground">
+      <section className="overflow-hidden rounded-lg border bg-white">
+        <div className="hidden grid-cols-[1.5fr_1fr_120px_120px] gap-4 border-b px-5 py-3 text-sm font-medium text-muted-foreground md:grid">
           <span>投稿タイトル</span>
           <span>案件</span>
           <span>形式</span>
@@ -37,12 +37,12 @@ export default async function PostsPage() {
             </p>
           ) : (
             posts.map((post) => (
-              <div key={post.id} className="grid grid-cols-[1.5fr_1fr_120px_120px] gap-4 px-5 py-4 text-sm">
+              <div key={post.id} className="grid gap-2 px-4 py-4 text-sm md:grid-cols-[1.5fr_1fr_120px_120px] md:gap-4 md:px-5">
                 <Link href={`/posts/${post.id}`} className="font-medium text-primary hover:underline">
                   {post.title}
                 </Link>
-                <span>{post.projects?.name ?? "-"}</span>
-                <span>{post.content_type}</span>
+                <span><span className="text-xs text-muted-foreground md:hidden">案件: </span>{post.projects?.name ?? "-"}</span>
+                <span><span className="text-xs text-muted-foreground md:hidden">形式: </span>{post.content_type}</span>
                 <span className="rounded-full bg-accent px-3 py-1 text-center text-xs font-medium text-accent-foreground">
                   {statusLabels[post.status] ?? post.status}
                 </span>

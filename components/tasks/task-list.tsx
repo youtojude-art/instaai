@@ -37,7 +37,7 @@ export function TaskList({ tasks, emptyMessage }: TaskListProps) {
               </div>
             </div>
           </div>
-          <span>{task.projects?.name ?? "案件未設定"}</span>
+          <span><span className="text-xs text-muted-foreground md:hidden">案件: </span>{task.projects?.name ?? "案件未設定"}</span>
           <span className="w-fit rounded-full bg-accent px-3 py-1 text-xs font-medium text-accent-foreground">
             優先度 {priorityLabels[task.priority] ?? task.priority}
           </span>

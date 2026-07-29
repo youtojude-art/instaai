@@ -131,9 +131,9 @@ export function ChatComposer({ selectedProjectId, disabled }: ChatComposerProps)
           }}
           required={!image}
         />
-        <Button type="submit" className="gap-2" disabled={disabled || isPending}>
+        <Button type="submit" className="h-10 shrink-0 gap-2 px-3 sm:px-4" disabled={disabled || isPending}>
           {image ? <ImagePlus className="h-4 w-4" /> : <Send className="h-4 w-4" />}
-          {isPending ? "送信中..." : "送信"}
+          <span className="hidden sm:inline">{isPending ? "送信中..." : "送信"}</span>
         </Button>
       </div>
       {message ? <p className="text-sm text-red-700">{message}</p> : null}

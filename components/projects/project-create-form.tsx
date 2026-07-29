@@ -37,7 +37,7 @@ export function ProjectCreateForm() {
         <Input name="industry" placeholder="例: 美容室" />
       </label>
       <div className="md:col-span-2">
-        <Button type="submit" disabled={isPending}>
+        <Button type="submit" disabled={isPending} className="w-full md:w-auto">
           {isPending ? "登録中..." : "案件を登録"}
         </Button>
         {message ? <p className="mt-3 text-sm text-muted-foreground">{message}</p> : null}

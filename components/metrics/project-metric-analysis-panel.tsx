@@ -37,7 +37,7 @@ export function ProjectMetricAnalysisPanel({ projects, metrics }: ProjectMetricA
           });
         }}
       >
-        <select name="projectId" className="h-10 min-w-64 rounded-md border bg-white px-3 text-sm outline-none focus:ring-2 focus:ring-ring" required>
+        <select name="projectId" className="h-10 w-full rounded-md border bg-white px-3 text-sm outline-none focus:ring-2 focus:ring-ring md:w-auto md:min-w-64" required>
           {analyzableProjects.map((project) => (
             <option key={project.id} value={project.id}>
               {project.name}

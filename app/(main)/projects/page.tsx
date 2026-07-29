@@ -14,8 +14,8 @@ export default async function ProjectsPage() {
 
       <ProjectCreateForm />
 
-      <section className="rounded-lg border bg-white">
-        <div className="grid grid-cols-[1.4fr_1fr_1fr_auto] gap-4 border-b px-5 py-3 text-sm font-medium text-muted-foreground">
+      <section className="overflow-hidden rounded-lg border bg-white">
+        <div className="hidden grid-cols-[1.4fr_1fr_1fr_auto] gap-4 border-b px-5 py-3 text-sm font-medium text-muted-foreground md:grid">
           <span>案件名</span>
           <span>会社名</span>
           <span>業種</span>
@@ -23,13 +23,13 @@ export default async function ProjectsPage() {
         </div>
         <div className="divide-y">
           {projects.map((project) => (
-            <div key={project.id} className="grid grid-cols-[1.4fr_1fr_1fr_auto] gap-4 px-5 py-4 text-sm">
+            <div key={project.id} className="grid gap-2 px-4 py-4 text-sm md:grid-cols-[1.4fr_1fr_1fr_auto] md:gap-4 md:px-5">
               <Link href={`/projects/${project.id}`} className="font-medium text-primary hover:underline">
                 {project.name}
               </Link>
-              <span>{project.company_name ?? "-"}</span>
-              <span>{project.industry ?? "-"}</span>
-              <span>{project.status === "active" ? "運用中" : "停止中"}</span>
+              <span><span className="text-xs text-muted-foreground md:hidden">会社名: </span>{project.company_name ?? "-"}</span>
+              <span><span className="text-xs text-muted-foreground md:hidden">業種: </span>{project.industry ?? "-"}</span>
+              <span><span className="text-xs text-muted-foreground md:hidden">状態: </span>{project.status === "active" ? "運用中" : "停止中"}</span>
             </div>
           ))}
           {projects.length === 0 ? (

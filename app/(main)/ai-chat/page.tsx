@@ -17,7 +17,7 @@ export default async function AiChatPage({ searchParams }: AiChatPageProps) {
   const selectedProject = projects.find((project) => project.id === selectedProjectId);
 
   return (
-    <div className="grid min-h-[calc(100vh-7rem)] grid-cols-1 gap-4 xl:grid-cols-[280px_1fr_340px]">
+    <div className="grid min-h-[calc(100vh-9rem)] grid-cols-1 gap-4 xl:min-h-[calc(100vh-7rem)] xl:grid-cols-[280px_1fr_340px]">
       <aside className="rounded-lg border bg-white p-4">
         <div className="flex items-center justify-between gap-3">
           <p className="text-sm font-semibold">案件一覧</p>
@@ -61,7 +61,7 @@ export default async function AiChatPage({ searchParams }: AiChatPageProps) {
 
           <div className="flex-1 space-y-4 overflow-y-auto p-5">
             {messages.length === 0 ? (
-              <div className="max-w-[78%] rounded-lg bg-muted p-4">
+              <div className="max-w-[92%] rounded-lg bg-muted p-4 sm:max-w-[78%]">
                 <div className="mb-2 flex items-center gap-2 text-sm font-medium">
                   <Bot className="h-4 w-4 text-primary" />
                   {workspace?.aiEmployee?.name ?? "AI社員"}
@@ -78,8 +78,8 @@ export default async function AiChatPage({ searchParams }: AiChatPageProps) {
                   key={message.id}
                   className={
                     message.role === "user"
-                      ? "ml-auto max-w-[78%] rounded-lg bg-primary p-4 text-primary-foreground"
-                      : "max-w-[78%] rounded-lg bg-muted p-4"
+                      ? "ml-auto max-w-[92%] rounded-lg bg-primary p-4 text-primary-foreground sm:max-w-[78%]"
+                      : "max-w-[92%] rounded-lg bg-muted p-4 sm:max-w-[78%]"
                   }
                 >
                   <div className="mb-2 flex items-center gap-2 text-sm font-medium">

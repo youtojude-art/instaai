@@ -48,7 +48,7 @@ export function PostDetailForm({ post }: PostDetailFormProps) {
         <Input name="scheduledAt" type="datetime-local" defaultValue={toDateTimeLocalValue(post.scheduled_at)} />
       </label>
       <div>
-        <Button type="submit" disabled={isPending}>
+        <Button type="submit" disabled={isPending} className="w-full md:w-auto">
           {isPending ? "保存中..." : "投稿内容を保存"}
         </Button>
         {message ? <p className="mt-3 text-sm text-muted-foreground">{message}</p> : null}
