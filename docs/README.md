@@ -11,6 +11,7 @@
 - [05_ai.md](./05_ai.md): AI社員、プロンプト、Structured Outputs、記憶、RAG設計
 - [06_development_plan.md](./06_development_plan.md): 開発フェーズ、実装順序、タスク一覧、テスト方針
 - [USER_MANUAL.md](./USER_MANUAL.md): 公開後のログイン、案件登録、AIチャット、投稿管理、承認、実績入力、月次レポートの操作マニュアル
+- [OFFICE_OPERATION_MANUAL.md](./OFFICE_OPERATION_MANUAL.md): 事務スタッフ向けの指示出し、LINE対応、撮影依頼、投稿管理、実績改善の業務マニュアル
 
 ## MVPの開発方針
 
