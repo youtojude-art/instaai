@@ -6,6 +6,7 @@ import { PostImageGenerator } from "@/components/images/post-image-generator";
 import { createDefaultImageDirection } from "@/features/images/prompt";
 import { PostMetricPanel } from "@/components/metrics/post-metric-panel";
 import { PostDetailForm } from "@/components/posts/post-detail-form";
+import { LineInstructionCopyPanel } from "@/components/posts/line-instruction-copy-panel";
 import { PostStatusForm } from "@/components/posts/post-status-form";
 import { PostTaskPanel } from "@/components/tasks/post-task-panel";
 import { getMetricPostOptions, getPostMetric } from "@/features/metrics/queries";
@@ -54,6 +55,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
           <PostMetricPanel post={post} posts={metricPosts} metric={metric} />
         </div>
         <aside className="space-y-4">
+          <LineInstructionCopyPanel post={post} />
           <ApprovalActionPanel postId={post.id} status={post.status} approvals={approvals} />
           <PostStatusForm postId={post.id} status={post.status} />
           <section className="rounded-lg border bg-white p-5">
