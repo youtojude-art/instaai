@@ -13,6 +13,8 @@ type OpenAiImageResponse = {
   };
 };
 
+export const defaultOpenAiImageModel = "gpt-image-2";
+
 export async function generateAiImage({ prompt, size }: GenerateImageInput) {
   const apiKey = process.env.OPENAI_API_KEY;
 
@@ -30,7 +32,7 @@ export async function generateAiImage({ prompt, size }: GenerateImageInput) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      model: process.env.OPENAI_IMAGE_MODEL ?? "gpt-image-1",
+      model: process.env.OPENAI_IMAGE_MODEL ?? defaultOpenAiImageModel,
       prompt,
       size,
       quality: process.env.OPENAI_IMAGE_QUALITY ?? "high",

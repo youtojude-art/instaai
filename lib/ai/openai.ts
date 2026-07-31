@@ -2,6 +2,8 @@ type GenerateAiReplyInput = {
   systemPrompt: string;
   userPrompt: string;
   imageDataUrl?: string;
+  textFormat?: OpenAiTextFormat;
+  reasoningEffort?: "none" | "low" | "medium" | "high" | "xhigh" | "max";
 };
 
 type OpenAiResponse = {
@@ -17,7 +19,22 @@ type OpenAiResponse = {
   };
 };
 
-export async function generateAiReply({ systemPrompt, userPrompt, imageDataUrl }: GenerateAiReplyInput) {
+type OpenAiTextFormat = {
+  type: "json_schema";
+  name: string;
+  strict: boolean;
+  schema: Record<string, unknown>;
+};
+
+export const defaultOpenAiModel = "gpt-5.6-terra";
+
+export async function generateAiReply({
+  systemPrompt,
+  userPrompt,
+  imageDataUrl,
+  textFormat,
+  reasoningEffort = "low"
+}: GenerateAiReplyInput) {
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
@@ -34,12 +51,9 @@ export async function generateAiReply({ systemPrompt, userPrompt, imageDataUrl }
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      model: process.env.OPENAI_MODEL ?? "gpt-4.1-mini",
+      model: process.env.OPENAI_MODEL ?? defaultOpenAiModel,
+      instructions: systemPrompt,
       input: [
-        {
-          role: "system",
-          content: systemPrompt
-        },
         {
           role: "user",
           content: imageDataUrl
@@ -57,8 +71,17 @@ export async function generateAiReply({ systemPrompt, userPrompt, imageDataUrl }
             : userPrompt
         }
       ],
-      temperature: 0.7,
-      max_output_tokens: 1800
+      reasoning: {
+        effort: reasoningEffort
+      },
+      max_output_tokens: 1800,
+      ...(textFormat
+        ? {
+            text: {
+              format: textFormat
+            }
+          }
+        : {})
     })
   });
 

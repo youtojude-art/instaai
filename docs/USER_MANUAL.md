@@ -287,7 +287,7 @@ Vercelの環境変数 `OPENAI_API_KEY` が正しいか、OpenAIの課金が有�
 Vercelの環境変数を確認してください。
 
 ```text
-OPENAI_IMAGE_MODEL=gpt-image-1
+OPENAI_IMAGE_MODEL=gpt-image-2
 OPENAI_IMAGE_QUALITY=high
 ```
 

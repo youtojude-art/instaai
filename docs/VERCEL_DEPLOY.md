@@ -64,8 +64,8 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 OPENAI_API_KEY=
-OPENAI_MODEL=gpt-4.1-mini
-OPENAI_IMAGE_MODEL=gpt-image-1
+OPENAI_MODEL=gpt-5.6-terra
+OPENAI_IMAGE_MODEL=gpt-image-2
 OPENAI_IMAGE_QUALITY=high
 NEXT_PUBLIC_APP_URL=https://your-app.vercel.app
 ```
@@ -146,7 +146,7 @@ VercelのEnvironment Variablesに `OPENAI_API_KEY` が入っているか確認�
 画像生成の場合は以下も確認します。
 
 ```env
-OPENAI_IMAGE_MODEL=gpt-image-1
+OPENAI_IMAGE_MODEL=gpt-image-2
 OPENAI_IMAGE_QUALITY=high
 ```
 

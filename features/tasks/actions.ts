@@ -151,7 +151,8 @@ export async function extractPostTasks(formData: FormData): Promise<ExtractTasks
   const workspace = await getProjectWorkspace(post.project_id);
   const aiResult = await generateAiReply({
     systemPrompt: createTaskExtractionSystemPrompt(),
-    userPrompt: createTaskExtractionUserPrompt({ post, workspace })
+    userPrompt: createTaskExtractionUserPrompt({ post, workspace }),
+    textFormat: createTaskExtractionTextFormat()
   });
 
   if (!aiResult.ok) {
@@ -242,10 +243,7 @@ function createTaskExtractionSystemPrompt() {
     "あなたはInstagram運用の進行管理担当です。",
     "投稿内容から、事務スタッフが実行すべきタスク候補を抽出してください。",
     "素材準備、画像生成、本文確認、承認、投稿予約、公開後の実績入力など、実務で必要な作業に分解してください。",
-    "出力はJSONのみ。説明文やMarkdownは出さないでください。",
-    "",
-    "JSON形式:",
-    "{\"tasks\":[{\"title\":\"タスク名\",\"description\":\"作業内容\",\"priority\":\"medium\"}]}",
+    "指定されたJSON schemaに一致するデータだけを返してください。",
     "",
     "制約:",
     "- tasksは3件から7件",
@@ -253,6 +251,46 @@ function createTaskExtractionSystemPrompt() {
     "- titleは短く具体的に",
     "- descriptionは事務スタッフが迷わず作業できる内容にする"
   ].join("\n");
+}
+
+function createTaskExtractionTextFormat() {
+  return {
+    type: "json_schema" as const,
+    name: "instagram_task_extraction",
+    strict: true,
+    schema: {
+      type: "object",
+      additionalProperties: false,
+      required: ["tasks"],
+      properties: {
+        tasks: {
+          type: "array",
+          minItems: 3,
+          maxItems: 7,
+          items: {
+            type: "object",
+            additionalProperties: false,
+            required: ["title", "description", "priority"],
+            properties: {
+              title: {
+                type: "string",
+                minLength: 1,
+                maxLength: 160
+              },
+              description: {
+                type: "string",
+                maxLength: 1000
+              },
+              priority: {
+                type: "string",
+                enum: ["low", "medium", "high"]
+              }
+            }
+          }
+        }
+      }
+    }
+  };
 }
 
 function createTaskExtractionUserPrompt({
